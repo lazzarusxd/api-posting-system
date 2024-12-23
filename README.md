@@ -7,12 +7,16 @@ Esta API oferece funcionalidades para o gerenciamento de postagens, permitindo a
 ## Funcionalidades
 
 - **Cadastro de Cliente (auth/signup):** Permite que um novo cliente se cadastre no sistema, inserindo seu nome, CPF/CNPJ e client_secret. Esses dados são salvos no banco de dados para gerar um novo usuário que poderá utilizar as funcionalidades da API de postagem.
+
 - **Login (auth):** Permite que o cliente se autentique na API utilizando client_id e seu client_secret como query parameter. A rota retorna um token JWT com validade de 1 dia, contendo o CPF/CNPJ do cliente como payload. Esse token é utilizado para autenticação nas rotas de postagem.
+
 - **Criação de Postagem (posting/new):** Cria um novo post no sistema com o status "CRIADO" e salva as informações na fila RabbitMQ "created_queue". A postagem também calcula o valor do frete de acordo com o volume e o peso do pacote. O cálculo do frete considera:
   - Frete mínimo de 20 reais.
   - Para pacotes com volume superior a 3000 cm³, cobra-se 1 real por cada 500 cm³ excedentes. 
-  - Para pacotes com peso superior a 5 kg, cobra-se R$ 2,00 por cada kg excedente
+  - Para pacotes com peso superior a 5 kg, cobra-se R$ 2,00 por cada kg excedente.
+
 - **Consultar Informações de Postagem (posting/info/{tracking_number}):** Retorna as informações de uma postagem através do código de rastreamento fornecido. Esta rota utiliza o Redis para cachear as informações da postagem por 5 minutos, a fim de otimizar o desempenho e reduzir a carga no banco de dados.
+
 - **Atualização de Status da Postagem (posting/update/{post_id}):** Permite atualizar o status de uma postagem identificada pelo post_id no path. O status pode ser alterado para "EM_TRANSITO" ou "ENTREGUE".
      - Quando o status for alterado para "EM_TRANSITO", consome-se a mensagem da fila "created_queue", envia-se um e-mail ao destinatário informando que a encomenda está em trânsito e salva-se uma nova mensagem na fila "on_course_queue".
      - Quando o status for alterado para "ENTREGUE", consome-se a mensagem da fila "on_course_queue", envia-se um e-mail ao destinatário informando que a encomenda foi entregue com sucesso.
@@ -326,6 +330,8 @@ http://localhost:8000/api/v1/posting/info/d343530a-5a8a-4a07-ad51-c6458de8ffd8
 **Exemplo de entrada:**
 
 ```plaintext
+URL http://localhost:8000/api/v1/posting/update/1
+
 {
   "status_postagem": "EM_TRANSITO"
 }
@@ -334,8 +340,6 @@ http://localhost:8000/api/v1/posting/info/d343530a-5a8a-4a07-ad51-c6458de8ffd8
 **Exemplo de resposta bem sucedida:**
 
 ```plaintext
-URL http://localhost:8000/api/v1/posting/update/1
-
 {
   "status_code": 200,
   "message": "Dados atualizados com sucesso.",
