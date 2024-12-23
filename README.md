@@ -84,7 +84,7 @@ api-posting-system/
 
 1- Clone este repositório:
 ```bash
-git clone https://github.com/lazzarusxd/api-posting_system.git
+git clone https://github.com/lazzarusxd/api-posting-system.git
 ```
 
 2- Navegue até o diretório do projeto:
