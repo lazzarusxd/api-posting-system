@@ -134,8 +134,6 @@ docker-compose up --build
 
 8- Crie a tabela no banco de dados usando Alembic:
 ```bash
-docker exec -it api-posting-system-app-1 poetry run alembic revision --autogenerate -m "Criadas as tabelas enderecos, clientes e postagens."
-
 docker exec -it api-posting-system-app-1 poetry run alembic upgrade head
 ```
 
