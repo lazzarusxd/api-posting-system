@@ -89,7 +89,7 @@ git clone https://github.com/lazzarusxd/api-posting_system.git
 
 2- Navegue até o diretório do projeto:
 ```bash
-cd api-posting_system
+cd api-posting-system
 ```
 
 3- Crie seu ambiente de desenvolvimento e instale as dependências usando Poetry:
